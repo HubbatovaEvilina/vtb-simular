@@ -666,7 +666,7 @@ class AssetCard:
     ) -> None:
         """Отрисовывает информацию о количестве в портфеле."""
         # Исправление: текст не выходит за границы карточки
-        portfolio_text = f"В портфеле: {portfolio_qty} шт."
+        portfolio_text = f"В портф.: {portfolio_qty} шт."
         text_width = small_font.size(portfolio_text)[0]
 
         # Проверяем, помещается ли текст
@@ -938,7 +938,8 @@ MARKET_EVENTS = [
     },
     {
         'name': 'Рост инфляции',
-        'description': 'Уровень инфляции превысил ожидания',
+        'description': 'Уровень инфляции'
+                       ' превысил ожидания',
         'effects': {'облигации': -0.03, 'акции': -0.02},
         'volatility_effect': 0.04
     },
@@ -1532,12 +1533,12 @@ def _draw_news_window(game_state: GameState) -> None:
         # Масштабируем до маленького размера для заголовка
         icon_size = (20, 20)  # Маленький размер для заголовка
         news_icon = pygame.transform.smoothscale(news_icon, icon_size)
-        # Позиционируем иконку слева в заголовке
-        icon_rect = news_icon.get_rect(midleft=(window_rect.x + 10, window_rect.y + 15))
+        # Позиционируем иконку ближе к тексту (сдвигаем ближе к центру)
+        icon_rect = news_icon.get_rect(midleft=(window_rect.x + 200, window_rect.y + 15))
         screen.blit(news_icon, icon_rect)
 
-        # Сдвигаем текст заголовка вправо, чтобы освободить место для иконки
-        header_text_x = window_rect.centerx + 10
+        # Текст заголовка сдвигаем правее иконки
+        header_text_x = window_rect.centerx + 20
     except (pygame.error, FileNotFoundError) as e:
         print(f"Ошибка загрузки иконки новостей: {e}")
         # Если изображение не найдено, используем эмодзи как запасной вариант
@@ -1555,8 +1556,8 @@ def _draw_news_window(game_state: GameState) -> None:
         # Показываем несколько последних новостей
         news_to_show = game_state.market_news[-3:]  # Последние 3 новости
         for i, news in enumerate(news_to_show):
-            if len(news) > 35:
-                news = news[:35] + "..."
+            if len(news) > 100:
+                news = news[:100] + "..."
             draw_text(
                 screen, f"• {news}", small_font, VTB_DARK_GRAY,
                 window_rect.x + 20, news_start_y + i * 25
